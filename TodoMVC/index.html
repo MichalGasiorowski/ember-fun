@@ -34,7 +34,7 @@
 
         <section id="main">
             {{outlet}}
-            <input type="checkbox" id="toggle-all">
+            {{input type="checkbox" id="toggle-all" checked=allAreDone}}
         </section>
 
         <footer id="footer">
@@ -52,10 +52,11 @@
                     {{#link-to "todos.completed" activeClass="selected"}}Completed{{/link-to}}
                 </li>
             </ul>
-
-            <button id="clear-completed">
-                Clear completed (1)
+            {{#if hasCompleted}}
+            <button id="clear-completed" {{action "clearCompleted"}}>
+                Clear completed ({{completed}})
             </button>
+            {{/if}}
         </footer>
     </section>
 
@@ -67,6 +68,7 @@
 <script src="js/libs/handlebars-1.1.2.js"></script>
 <script src="js/libs/ember-1.5.1.js"></script>
 <script src="js/libs/ember-data.js"></script>
+<script src="js/libs/localstorage_adapter.js"></script>
 <script src="js/application.js"></script>
 <script src="js/router.js"></script>
 <script src="js/models/todo.js"></script>
