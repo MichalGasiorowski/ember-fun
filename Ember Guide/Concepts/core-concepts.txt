@@ -1,0 +1,39 @@
+EmberJS core concepts
+
+**TEMPLATES**
+A template(written in Handlebars), describes the user interface of app.
+Each template is backed by a model, and template automatically updates
+itself if the model changes.
+TEMPLATES can contain:
+-- Expressions, like {{firstName}}, which take information from the template's
+model and put it into HTML.
+-- Outlets, which are placeholders for other templates. As users move around the app,
+different templates can be plugged into the outlet by router. {{outlet}}
+-- Components, custom HTML elements that you can use to clean up repetitive 
+templates or create reusable controls.
+
+**ROUTER**
+The router translates a URL into a series of nested templates, each backed by a model.
+As the templates or models being shown to the user change.
+Ember automatically keeps URL in the browser's address bar up-to-date.
+--> Users are able to share the URL of your app 
+    they see same content as original user.
+	
+**COMPONENTS**
+A component is a custom HTML tag whose behaviour you implement using JavaScript and
+whose appearance you describe using Handlebars templates. They allow you to create reusable 
+controls that can simplify your application's templates.
+
+**MODELS**
+A model is an object that stores persistent state. Templates are responsible 
+for displaying the model by turning it into HTML. In many apps, 
+models are loaded via HTTP JSON API, but Ember is agnostic to backend.
+
+**ROUTE**
+A route is an object that tells the template which model it should display.
+
+**CONTROLLERS**
+A controller is an object that stores application state. A template can 
+optionally have a controller in addition to a model, and can
+retrieve properties from both.
+

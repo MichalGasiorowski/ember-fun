@@ -1,0 +1,171 @@
+//Ember.js naming conventions
+
+//Ember.js uses naming conventions to wire up your 
+//objects without a lot of boilerplate.
+//-->Assume: 
+//'App' : name chosen for namespace (represents Ember app)
+
+//**THE APPLICATION**
+//On app boot:
+//Ember will look for these objects:
+//-->App.ApplicationRoute
+//-->App.ApplicationController
+//-->application template
+//Ember will render application template as main template. 
+//If App.ApplicationController is provided, Ember.js will set 
+//an instance of App.ApplicationController as controller for template.
+//(template will get its properties from the controller)
+
+//If app provides App.ApplicationRoute, Ember.js will 
+//invoke the router's hooks first, before rendering the application template.
+//Hooks are implemented as methods and provide you access points within 
+//an Ember object's lifecycle to intercept and execute code 
+//to modify default behaviour.
+
+//Example:
+App.ApplicationRoute = Ember.Route.extend({
+	setupController: function(controller) {
+		//'controller' is the instance of ApplicationController
+		controller.set('title', "Hello world!");
+	}
+});
+
+App.ApplicationController = Ember.Controller.extend({
+	appName: 'My First Example'
+});
+
+//<!-- app template -->
+<h1>{{appName}}</h1>
+
+<h2>{{title}}</h2>
+
+//Controllers -->always as classes(framework is responsible for instantiating them)
+
+//**SIMPLE ROUTES**
+//Each route will have a controller and template with same name
+
+App.Router.map(function() {
+	this.route('favorites');
+});
+//--> User navigates to /favorites -> Ember.js will look for these objects:
+//App.FavoritesRoute
+//App.FavoritesController
+//favorites template
+
+//-->Ember will render favorites template into {{outlet}} in application template.
+//Will set an instance of App.FavoritesController as controller of template.
+//If app provides App.FavoritesRoute ->framework will invoke it before rendering the template.
+//-->Implement model for Route:
+App.FavoritesRoute = Ember.Route.extend({
+	model: function() {
+		// the model is an Array of all of the posts
+		return this.store.find('post');
+	}
+});
+//FavoritesController -> default Ember.js ArrayController
+//Template can iterate over el's of the controller:
+<ul>
+{{#each controller}}
+	<li>{{title}}</li>
+{{/each}}
+</ul>
+//**DYNAMIC SEGMENTS**
+//If a route uses a dynamic segment, the route's model will be based on the value
+//of that segment provided by the user.
+
+App.Router.map(function() {
+	this.resource('post', { path: '/posts/:post_id' });
+});
+//Ember will look for:
+//--> App.PostRoute
+//--> App.PostController
+//--> the post template
+//The route handler's model hook converts the dynamic post_id
+//parameter into a model. The serialize hook converts a model 
+//object back into the URL parameters for this route.
+App.PostRoute = Ember.Route.extend({
+	model: function(params) {
+		return this.store.find('post', params.post_id);
+	},
+	serialize: function(post) {
+		return { post_id: post.get('id') };
+	}
+});
+//It's the DEFAULT route for handlers
+//--> DYNAMIC segment ends in _id -> default model hook will convert 
+//first part into model class on app namespace (post -> App.Post). 
+//It will then call find  on that class with value of dynamic segment.
+//The default behaviour of serialize hook -> replace route's dynamic segment
+//with value of the model object's id property.
+
+//**ROUTE, CONTROLLER AND TEMPLATE DEFAULTS**
+//If you don't specify a route handler for the post route (App.PostRoute), 
+//Ember.js will still render post template with app's instance of App.PostController
+//If you don't specify controller(App.PostController), Ember will 
+//automatically make one for you based on the return value of route's model hook. 
+//If the model is Array you get ArrayController, otherwise -> ObjectController
+
+//**NESTING**
+//Can nest routes under a resource.
+App.Router.map(function() {
+	this.resource('posts', function() {
+		this.route('favorites');
+		this.resource('post');
+	});
+});
+//A resource -> beginning of a route, controller or template name. 
+//When nesting route inside resource -> route name is added to the resource name, after .
+
+//Route Name 		Controller 					Route 				Template
+//posts				PostsController				PostsRoute			posts
+//posts.favorites	PostsFavoritesController	PostsFavoritesRoute	posts/favorites
+//post				PostController				PostRoute			post
+
+//Rule of thumb:
+//* resources for nouns, routes for adjectives(favorites) or verbs(edit) 
+
+//**THE INDEX ROUTE**
+//At every level of nesting -> Ember automatically provides route for /path named index
+App.Router.map(function() {
+	this.route('favorites');
+});
+//<=>
+App.Router.map(function() {
+	this.route('index', { path: '/' });
+	this.route('favorites');
+});
+//If user visits / Ember.js will lokk for objects:
+//App.IndexRoute
+//App.IndexController
+//index template
+//The index template will be rendered into the {{outlet}} in application template.
+//If the user navigates to /favorites, Ember.js will replace the index 
+//template with the favorites template.
+//Nested router like:
+App.Router.map(function() {
+	this.resource('posts', function() {
+		this.route('favorites');
+	});
+});
+//<=>
+App.Router.map(function() {
+	this.route('index', { path: '/' });
+	this.resource('posts', function() {
+		this.route('index', { path: '/' });
+		this.route('favorites');
+	});
+});
+//If user navigate to /posts the current route will be posts.index 
+//Ember.js will look for objects named:
+//App.PostsIndexRoute
+//App.PostsIndexController
+//The posts/index template
+
+
+
+
+
+
+
+
+

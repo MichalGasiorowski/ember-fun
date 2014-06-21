@@ -1,0 +1,24 @@
+// Computed Properties and Aggregate Data with @each 
+// Often there are computed property that relies on all items in an array
+// Ex: count all todo items in a controller...
+App.TodosController = Ember.Controller.extend({
+	todos: [
+		Ember.Object.create({ isDone: false })
+	],
+	
+	remaining: function() {
+		var todos = this.get('todos');
+		return todos.filterby('isDone', false).get('length');
+	}.property('todos.@each.isDone')
+});
+// dependent key (todos.@each.isDone) contains special key @each.
+// This instructs Ember.js to update bindings and fire observers for 
+// this computed property when one of the following 4 events occurs:
+// 1. The isDone property of any objects in todos array changes
+// 2. An item is added to the todos array
+// 3. An item is removed
+// 4. todos property of controller is changed to defferent array
+
+// @each only works one level deep. You cannot use nested forms like
+// todos.@each.owner.name or todos.@each. .....
+

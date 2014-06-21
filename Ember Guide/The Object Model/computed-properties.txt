@@ -1,0 +1,87 @@
+// COMPUTED PROPERTIES
+// let declare functions as properties
+App.Person = Ember.Object.extend({
+	firstName: null,
+	lastName: null,
+	
+	fullName: function() {
+		return this.get('firstName') + ' ' + this.get('lastName');
+	}.property('firstName', 'lastName')
+});
+var ironMan = App.Person.create({
+	firstName: "Tony",
+	lastName: "Stark"
+});
+ironMan.get('fullName');
+// fullName calls property. This declares function to be computed property
+// arguments tell Ember that it depends on firstName and lastName attributes.
+
+// ALTERNATE INVOCATION
+// .property can be called on function because Ember extends the function prototype.
+// other way:
+fullName: Ember.computed('firstName', 'lastName', function() {
+	return this.get('firstName') + ' ' + this.get('lastName');
+})
+
+// CHAINING COMPUTED PROPERTIES
+// Computed properties can be used as values to create new computed properties
+App.Person = Ember.Object.extend({
+	firstName: null,
+	lastName: null,
+	age: null,
+	country: null,
+	
+	fullName: function() {
+		return this.get('firstName') + ' ' + this.get('lastName');
+	}.property('firstName', 'lastName'),
+	description: function() {
+		return this.get('fullName') + '; Age: ' + this.get('age') + '; Country: ' + this.get('country');
+	}.property('fullName', 'age', 'country')
+});
+var capitainAmerica = App.Person.create({
+	firstName: 'Steve',
+	lastName: 'Rogers',
+	age: 80,
+	country: 'USA'
+});
+capitainAmerica.get('description');
+
+// DYNAMIC UPDATING
+// Computed properties, by default, observe any changes made to the properties they depend 
+// on and are dynamically updated when they're called.
+capitainAmerica.set('firstName', 'William');
+capitainAmerica.get('description');
+// Setting any dependent property will propagate changes through any computed 
+// properties that depends on them, all the way down.
+
+// SETTING COMPUTED PROPERTIES
+// Can also define what to do when setting computed property
+
+App.Person = Ember.Object.extend({
+	firstName: null,
+	lastName: null,
+	
+	fullName: function(key, value, previousValue) {
+	// setter
+		if (arguments.length > 1) {
+			var nameParts = value.split(/\s+/);
+			this.set('firstName', nameParts[0]);
+			this.set('lastName', nameParts[1]);
+		}
+		// getter
+		return this.get('firstName') + ' ' + this.get('lastName');
+	}.property('firstName', 'lastName')
+});
+var capitainAmerica = App.Person.create();
+capitainAmerica.set('fullName', "William Burnside");
+// Ember will call computed property for both setters and getters -> if want 
+// to use computed property as a setter, you'll need to check number of arguments
+// to determine if called as setter or getter. If value is returned from setter,
+// it will be cached as the property's value
+
+
+
+
+
+
+

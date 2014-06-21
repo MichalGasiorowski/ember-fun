@@ -1,0 +1,40 @@
+// BINDINGS
+// A binding creates a link between 2 properties such that 
+// when one changes, the other is update to new value automatically.
+// Binding can connect properties on the same object, or across 2 different objects
+// Unlike other frameworks, binding can be used with any object
+
+wife = Ember.Object.create({
+	householdIncome: 80000
+});
+husband = Ember.Object.create({
+	wife : wife,
+	householdIncome: Ember.computed.alias('wife.householdIncome')
+});
+husban.get('householdIncome'); // 80000
+husband.set('householdIncome', 90000);
+wife.get('householdIncome'); //90000
+// Binding don't update immediately. Ember waits until all of
+// app code has finished running before synchronizing changes
+// --> can change a bound property as many times as you'd like
+// without worrying about overhead of  syncing bindings
+
+// ONE-WAY BINDINGS
+// One-way bindings only propagate changes in one direction. Often 1-way bindings 
+// are performance opts. and can safely use 2-way bindings.
+// Sometimes 1-way bindings are useful to achieve specific behaviour such as a default
+// that is the same as another property but can be overriden (ex shipping address)
+
+user = Ember.Object.create({
+	fullName: "Kara Gates"
+});
+userView = Ember.View.create({
+	user: user,
+	userName: Ember.computed.oneWay('user.fullName')
+});
+// Changing the name of user object changes 
+// value of the view
+user.set('fullName', "Krang Gates");
+// ... but changes to the view don't make it back to the object
+userView.set('userName', "BLABLA");
+user.get('fullName'); // "Krang Gates"
