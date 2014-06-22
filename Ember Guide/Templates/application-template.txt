@@ -1,0 +1,31 @@
+// THE APPLICATION TEMPLATE
+// The application template is default template when app starts
+
+// -> should put header, footer + decorative content here
+// -> should have >=1 {{outlet}} -> a placeholder that router will fill 
+// with appropriate template, based on current URL
+// ex:
+<header>
+	<h1>Igor's Blog</h1>
+</header>
+
+<div>
+	{{outlet}}
+</div>
+
+<footer>
+	&copy;2013 Igor's Publishing, Inc.
+</footer>
+
+// Header and footer will always be displayed on screen, contents of <div> will
+// change depending on if the user is currently at /posts /posts/15
+
+// If keeping templates in HTML, create <script> tag without a template name. Ember
+// will use template without name as the app template  and it will automatically be 
+// compiled and appended to the screen
+<script type="text/x-handlebars>
+	<div>
+		{{outlet}}
+	</div>
+</script>
+

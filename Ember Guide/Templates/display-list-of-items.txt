@@ -1,0 +1,33 @@
+// DISPLAYING LIST OF ITEMS
+// use {{#each}}
+<ul>
+	{{#each people}}
+		<li>Hello, {{name}}!</li>
+	{{/each}}
+</ul>
+// The template inside of {{#each}} block will be repeated once for each item in array
+// with the context of the template set of current item
+// Will print to:
+<ul>
+  <li>Hello, Yehuda!</li>
+  <li>Hello, Tom!</li>
+  <li>Hello, Trek!</li>
+</ul>
+
+// {{#each}} helper is bindings-aware. If app adds new item 
+// to array or removes an item, the DOM will be update without 
+// having to write any code.
+// Alternative for of {{#each}}, does not change scope of inner template
+{{name}}'s Friends
+<ul>
+	{{#each friend in friends}}
+		<li>{{name}}'s friend {{friend.name}}</li>
+	{{/each}}
+</ul>
+
+// {{#each}} helper can have a matching {{else}}.
+{{#each people}}
+	Hello, {{name}}!
+{{else}}
+	Sorry, nobody is here.	
+{{/each}}

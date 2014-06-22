@@ -1,0 +1,17 @@
+// CHANGING SCOPE
+// Invoking section of template with different context
+// Ex, instead of:
+Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+// use:
+{{#with person}}
+Welcome back, <b>{{firstName}} {{lastName}}</b>!
+{{/with}}
+
+// {{#with}} changes context of the block you pass to it. 
+// By default - template controller 
+// Possible to store context within a variable:
+{{#with person as user}}
+	{{#each book in books}}
+		{{user.firstName}} has read {{book.name}}!
+	{{/each}}
+{{/with}}

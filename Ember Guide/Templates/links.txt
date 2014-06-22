@@ -1,0 +1,87 @@
+// LINKS
+// THE {{link-to}} HELPER
+// Create a link to a route using {{link-to}} helper.
+App.Router.map(function() {
+	this.resource("photos", function() {
+		this.route("edit", { path: "/:photo_id" });
+	});
+});
+<ul>
+	{{#each photo in photos}}
+	<li>{{#link-to 'photos.edit' photo}}{{photo.title}}{{/link-to}}</li>
+</ul>
+// it will render to:
+<ul>
+  <li><a href="/photos/1">Happy Kittens</a></li>
+  <li><a href="/photos/2">Puppy Running</a></li>
+  <li><a href="/photos/3">Mountain Landscape</a></li>
+</ul>
+
+// When rendered link matches the current route, and same object 
+// instance is passed into helper, link is given class="active"
+
+// The {{link-to}} helper takes:
+// -> name of a route ( ex: index, photos, photos.edit)
+// -> at most one model for each dynamic segment. By default,
+// Ember.js will replace each segment with value of corresponding 
+// object's id property. If there is no model to pass to the helper,
+// you can provide an explicit identifier value instead. The value 
+// will be filled into dynamic segment of the route.
+
+{{#link-to 'photo.edit' 1}}
+  First Photo Ever
+{{/link-to}}
+
+// EXAMPLE FOR MULTIMPLE SEGMENTS
+// If route is nested, you can supply a model or an identifier 
+// for each dynamic segment.
+App.Router.map(function() {
+	this.resource("photos", function() {
+		this.resource("photo", { path: "/:photo_id" }, function() {
+			this.route("comments");
+			this.route("comment", { path: "/comments/:comment_id" });
+		});
+	});
+});
+<div class="photo">
+	{{body}}
+</div>
+
+<p>{{#link-to 'photo.comment' primaryComment}}Main Comment{{/link-to}}</p>
+// If you specify only one model, it will represent most innermost 
+// dynamic segment :comment_id . The "photo_id segment will use current photo.
+
+// Alternatively, you could pass both photo and a comment to helper
+<p>
+	{{#link-to 'photo.comment' 5 primaryComment}}
+		Main Comment for the Next Photo
+	{{/link-to}}
+</p>
+// Model hook for PhotoRoute will run with params.photo_id = 5. The model hook 
+// for CommentRoute won't run since you supplied a model object for comment segment. 
+// The comment's id will populate the url according to CommentRoute's serialize hook
+
+// ADDING ADDITIONAL ATTRIBUTES ON A LINK
+// When generating a link you might want to set additional attributes for it. 
+// You can this with additional arguments to link-to helper:
+<p>
+	{{link-to 'Edit this photo' 'photo-edit' photo class="btn btn-primary"}}
+</p>
+
+// Many common HTML properties you would want to use like class or rel will work.
+// When adding class names Ember will also apply standard 
+// ember-view and possibly active class names.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

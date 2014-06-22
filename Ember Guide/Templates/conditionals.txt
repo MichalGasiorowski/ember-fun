@@ -1,0 +1,29 @@
+// CONDITIONALS
+// want to only display part of template if a property exists
+// {{#if}}
+
+{{#if person}}
+	Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+{{/if}}
+
+// Handlebars will not render block if passed argument evaluates to
+// false, undefined, null, [] ("falsy" value)
+
+// can also display alternate template using {{else}}
+{{#if person}}
+	Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+{{else}}
+	Please log in
+{{/if}}
+
+// To only render a block if a value is falsy, use {{#unless}}
+{{#unless hasPaid}}
+	You owe: ${{total}}
+{{/unless}
+// {{#if}} and {{#unless}} are examples of block expressions. 
+// These allow invoke a helper with portion of your template
+// Block expressions look like normal except they contain hash (#)
+// before the helper name, and require closing expressions
+
+
+

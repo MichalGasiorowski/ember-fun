@@ -1,0 +1,12 @@
+// CREATING AN APLLICATION
+// -> first step: make instance of Ember.Application
+window.App = Ember.Application.create();
+// call it App ( can be anything but start with capital letter
+// --> create application namespace. All of app's classes will
+// be defined as properties of this object. Prevents polluting global namespace
+// --> Adds event listeners to the ducument and is responsible 
+// for delegating events to your views. 
+// --> Automatically renders application template
+// --> Automatically creates router and begins routing, choosing
+// which template and model to display
+

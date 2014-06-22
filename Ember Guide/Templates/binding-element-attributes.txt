@@ -1,0 +1,48 @@
+// Binding Element Attributes 
+// Can also templates contain HTML elements whose 
+// attributes are bound to controller
+// Ex:
+<div id="logo">
+  <img {{bind-attr src=logoUrl}} alt="Logo">
+</div>
+// using {{bind-attr}} with boolean attribute will add or remove attr:
+<input type="checkbox" {{bind-attr disabled=isAdministrator}}>
+
+// ADDING DATA ATTRIBUTES
+// By default view helpers do not accept data attributes:
+{{#link-to "photos" data-toggle="dropdown"}}Photos{{/link-to}}
+{{input type="text" data-toggle="tooltip" data-placement="bottom" title="Name"}}
+// will render:
+<a id="ember239" class="ember-view" href="#/photos">Photos</a>
+<input id="ember257" class="ember-view ember-text-field" type="text" title="Name">
+
+// --> add attribute binding on the view
+Ember.LinkView.reopen({
+	attributeBindings: ['data-toggle']
+});
+Ember.TextField.reopen({
+	attributeBindings: ['data-toggle', 'data-placement']
+});
+// renders to:
+
+<a id="ember240" class="ember-view" href="#/photos" data-toggle="dropdown">Photos</a>
+
+<input id="ember259" class="ember-view ember-text-field" 
+       type="text" data-toggle="tooltip" data-placement="bottom" title="Name">
+
+// can also automatically bind data attributes on the base view:
+
+Ember.View.reopen({
+	init: function() {
+		this._super();
+		var self = this;
+		
+		// bind attributes beginning with 'data-'
+		Em.keys(this).forEach(function(key) {
+			if(key.substr(0, 5) === 'data-' {
+				self.get('attributeBindings').pushObject(key);
+			}
+		};
+	}
+});
+

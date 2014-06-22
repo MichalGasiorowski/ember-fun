@@ -1,0 +1,167 @@
+// ACTIONS THE {{action}} helper
+// -> have a template that shows a blog post and 
+// supports expanding post with additional information.
+
+// Can use {{action}} helper to make HTML element clickable.
+// When user clicks element, the named event will be sent to your app.
+
+<!-- post.handlers -->
+
+<div class='intro'>
+	{{intro}}
+</div>
+
+{{#if isExpanded}}
+	<div class='body'>{{body}}</div>
+	<button {{action 'contract'}}>Contract</button>
+{{else}}
+	<button {{action 'expand'}}>Show More...</button>
+{{/if}}
+
+App.Controller = Ember.ObjectController.extend({
+	//initial value
+	isExpanded: false,
+	
+	actions: {
+		expand: function() {
+			this.set('isExpanded', true);
+		},
+		
+		contract: function() {
+			this.set('isExpanded', false);
+		}
+	}
+});
+// ACTION BUBBLING
+// by default {{action}} helper triggers a method of the template's controller
+// If controller does not implement method with same name as action in its 
+// actions object, the action will be sent to the router, where currently 
+// active leaf will be given a chance to handle the action.
+
+// Routes and controllers that handle actions must place action handlers inside 
+// **actions hash**. Even if a route has a method with the same name, it will be not 
+// triggered unless it is inside actions hash
+App.PostRoute = Ember.Route.extend({
+  actions: {
+    expand: function() {
+      this.controller.set('isExpanded', true);
+    },
+
+    contract: function() {
+      this.controller.set('isExpanded', false);
+    }
+  }
+});
+// action handlers are called such that when executed, *this* is the route,
+// not the actions hash
+// To continue bubbling action, you must return true from handler:
+App.PostRoute = Ember.Route.extend({
+	actions: {
+		expand: function() {
+			this.controller.set('isExpanded', true);
+		},
+		contract: function() {
+		// ...
+			if(actionShouldAlsoBeTriggeredOnParentRoute) {
+				return true;
+			}
+		}
+	}
+});
+// If neither template's controller nor currently route implements a handler,
+// action will continue to bubble to any parent routes. Ultimately,
+// if an ApplicationRoute is defined, it will have an opportunity to handle the action.
+
+// When an action is triggered, but no matching action handler 
+// is implemented on the controller, the current route or any of the 
+// current route's ancestors, an error will be thrown.
+
+/*
+{{action 'expand'}} => App.PostController => App.PostRoute => App.PostRoute => App.ApplicationRoute
+*/
+
+// This allows you to create a button that has different behaviour based 
+// on where you are in the app.
+// Ex: button to do one thing if inside /posts route and another if inside /about route
+
+// ACTION PARAMETERS
+// Optionally -> pass arguments to action handler. Any values passed to {{action}} helper
+// after action name will be passed to the handler as arguments.
+<p><button {{action "select" post}}ok</button> {{post.title}}</p>
+// The controller's select action handler would be called with single argument containing post model:
+App.PostController = Ember.ObjectController.extend({
+	actions: {
+		select: function(post) {
+			console.log(post.get('title'));
+		}
+	}
+});
+// SPECIFYING THE TYPE OF EVENTS
+// By default {{action}} helper listens for click events and 
+// triggers the action when user clicks on the element
+// Can specify an alternative event by using the on option
+<p>
+	<button {{action "select" post on="mouseup"}}>ok</button>
+	{{post.title}}
+</p>
+// In general use normalized event names -> two-word event names (keypress->keyPress)
+// SPECIFYING WHITELISTED MODIFIER KEYS
+// By default {{action}} helper will ignore click events with pressed modifier keys
+// Can supply allowedKeys option to specify which keys should not be ignored
+<script type="text/x-handlebars" data-template-name='a-template'>
+	<div {{action 'anActionName' allowedKeys="alt"}}>
+	click me
+	</div>
+</script>
+// {{action}} will fire when clicking with alt key pressed down
+
+// STOPPING EVENT PROPAGATION
+// By default, {{action}} helper allow events it handles 
+// to bubble up to parent DOM nodes. Can disable propagation to parent node.
+{{#link-to 'pst'}}
+	Post
+	<button {{action ;close' bubbles=false}}>X</button>
+{{/link-to}}
+// Without bubbles=false if user clicked on the button, Ember.js will 
+// trigger action and then browser will propagate click to the link
+// With bubbles=false Ember.js will stop browser from propagating event.
+
+// SPECIFYNG A TARGET
+// By default {{action}} helper will send action to the view's target, 
+// which is generally the view's controller.
+// Can specify an alternative target by using target option. 
+<p>
+	<button {{action "select" post target="view"}}>ok</button>
+</p>
+// action is send to view instead of controller
+// Handling this in actions hash on your view
+App.PostsIndexView = Ember.View.extend({
+	actions: {
+		select: function(post) {
+			// do business
+		}
+	}
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+// HANDLEBARS BASICS
+// Ember uses handlebars templating library. -> ike regular HTML but also give 
+// ability to embed expressions that change what is displayed
+// Like HTML-like DSL for describing user interface of app.
+
+// DEFINING TEMPLATES
+<html>
+	<body>
+		<script type="text/x-handlebars">
+			Hello, <strong>{{firstName}} {{lastName}}</strong>!
+		</script>
+	</body>
+</html>
+// This template will be compiled automatically and become app template
+// Can also define templates by name that can be used later.
+// to tell Ember.js to save template for later, instead of displaying immediately,
+// add data-template-name attribute:
+<html>
+	<body>
+		<script type="text/x-handlebars" data-template-name="say-hello">
+			<div class="my-cool-control">{{name}}</div>
+		</script>
+	</body>
+</html>
+
+// Handlebars expressions
+// Each template has associated controller : this is where template 
+// finds properties that it displays
+Hello, <strong>{{firstName}} {{lastName}}</strong>!
+// by default, top-most application template is bound to ApplicationController
+App.ApplicationController = Ember.Controller.extend({
+	firstName: "Mike",
+	lastName: "Crazy"
+});
+// These expression are bindings aware. -> if values used by templates change
+// HTML will be update automatically
+

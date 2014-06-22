@@ -1,0 +1,54 @@
+// Binding Element Class Names 
+// HTML element's class attribute can be bound:
+<div {{bind-attr class="priority"}}>
+	Warning!
+</div>
+// If controller's priority property is "p4", this template will emit HTML:
+<div class="p4">
+	Warning!
+</div>
+
+// BINDING TO BOOLEAN VALUES
+// If value to which you bind is a Boolean -> Ember.js 
+// will apply dasherized version of property name as a class:
+<div {{bind-attr class="isUrgent"}}>
+  Warning!
+</div>
+// will emit on false:
+<div>
+  Warning!
+</div>
+// if want to explicitly provide class name ( instead of Ember dasherizing property name):
+<div {{bind-attr class="isUrgent:urgent"}}>
+ Warning!
+</div>
+// it will produce:
+<div class="urgent">
+  Warning!
+</div>
+// can also provide class name when property is false:
+<div {{bind-attr class="isEnabled:enabled:disabled"}}>
+ Warning!
+</div>
+// can also add class if property is false and remove if true:
+<div {{bind-attr class="isEnabled::disabled"}}>
+ Warning!
+</div>
+
+// STATIC CLASSES
+// if element must have combination of static and bound classes.
+// include static class in list prefixed by colon:
+<div {{bind-attr class=":high-priority isUrgent"}}>
+	Warning!
+</div>
+// some classes and static class names cannot be combined. THIS WILL NOT WORK:
+<div class="high-priority" {{bind-attr class="isUrgent"}}>
+  Warning!
+</div>
+// Can bind multiple classes:
+<div {{bind-attr class="isUrgent priority"}}>
+  Warning!
+</div>
+
+
+
