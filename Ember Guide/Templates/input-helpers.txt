@@ -1,0 +1,31 @@
+// INPUT HELPERS
+// The {{input}} and {{textarea}} helpers -> easiest 
+// way to create common form controls.
+// {{input}} helper wraps built-in Ember.TextField and Ember.CheckBox
+// {{textarea}} wraps Ember.TextArea . Using these helpers you can 
+// create these views with declarations almost like <input> or <textarea>
+
+// TEXT FIELDS
+{{input value="http://www.facebook.com"}}
+// will become:
+<input type="text" value="http://www.facebook.com" />
+// Can pass following standard <input> attributes:
+// value ; size ; name ; pattern ; placeholder ; disabled ;
+// maxlength ; tabindex
+// If these attribute are set to a quoted string, values will be 
+// set directly on element. If left unquoted, values will be 
+// bound to a property on the template's current rendering context.
+{{input type="text" value=firstName disabled=entryNotAllowed siez="50"}}
+// CHECKBOXES
+// Can also use {{input}} helper to create checkbox by setting its type
+{{input type="checkbox" name="isAdmin" checked=isAdmin}}
+// Checkboxes support following properties:
+// checked ; disabled ; tabIndex ; indeterminate ; name
+
+// TEXT AREAS
+{{textarea value=name cols="80" rows="6"}}
+// {{textarea}} support properties:
+// rows ; cols ; placeholder ; disabled ; maxlength ; tabindex
+
+
+

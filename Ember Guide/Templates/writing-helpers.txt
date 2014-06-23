@@ -1,0 +1,38 @@
+// WRITING HELPERS
+// May use same HTML in your application multiple times. In those cases, can register
+// custom helper that can be invoked from any handlebars template
+
+// For example, to wrap certain values in <span> tag:
+Ember.Handlebars.helper('highlight', function(value, options) {
+	var escaped = Handlebars.Utils.escapeExpression(value);
+	return new Ember.Handlebars.SafeString('<span class="highlight">' + escaped + '</span>');
+});
+
+// If want return HTML from helper and don't want it to be escaped 
+// -> make sure to return new SafeString -> make sure escape user data!
+// to invoke now:
+{{highlight name}}
+<span class="highlight">Peter</span>
+// If name property on current context changes, Ember.js will automatically execute helper again
+// and update DOM with new value.
+
+// DEPENDENCIES
+// Want render full name of App.Person. In this case:
+Ember.Handlebars.helper('fullName', function(person) {
+	return person.get('firstName') + ' ' + person.get('lastName');
+	
+}, 'firstName', 'lastName');
+// Using it like that:
+{{fullName person}}
+// If context's person changes or when any of dependent keys change, 
+// output will automatically change
+// Both the passed fullName helper and its dependent keys may be full property paths.
+
+// CUSTOM VIEW HELPERS
+// Can also register custom viewer helper
+Ember.Handlebars.helper('calendar', App.CalendarView);
+// using it like that:
+{{calendar}}
+// with functionality equivalent to:
+{{view App.CalendarView}}
+

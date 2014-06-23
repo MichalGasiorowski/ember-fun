@@ -1,0 +1,120 @@
+// RENDERING WITH HELPERS
+// THE {{partial}} HELPER
+
+// {{partial}} takes template to be rendered as 
+// argument and renders template in place
+// {{partial}} does not change context or scope. 
+// It simply drops given template into place
+
+<script type="text/x-handlebars" data-template-name='_author'>
+	Written by {{author.firstName}} {{author.lastName}}
+</script>
+
+<script type="text/x-handlebars" data-template-name='post'>
+	<h1>{{title}}</h1>
+	<div>{{body}}</div>
+	{{partial "author"}}
+</script>
+
+<div>
+	<h1>Why You Should Use Ember.JS</h1>
+	<div>Becaus it's awesome!</div>
+	Written by Yehuda Katz
+</div>
+// The partial data-template-name MUST start with an underscore
+
+// THE {{view}} HELPER
+// {{view}} works like partial helper, except instead of providing 
+// template to be rendered within the current template, you provide a view class.
+// The view controls what template is rendered
+
+App.AuthorView = Ember.View.extend({
+	// We are setting templateName manually here to the default value
+	templateName: "author",
+	
+	// A fullName property should probably go on App.Author,
+	// but we're doing it here for the example
+	fullName: function() {
+		return this.get("author").get("firstName") + " " + this.get("author").get("lastName");
+	}).property("firstName", "lastName")
+});
+<script type="text/x-handlebars" data-template-name='author'>
+  Written by {{view.fullName}}
+</script>
+<script type="text/x-handlebars" data-template-name='post'>
+	<h1>{{title}}</h1>
+	<div>{{body}}</div>
+	{{view App.AuthorView}}
+</script>
+// When using {{partial "author"}} :
+// No instance of App.AuthorView will be created
+// Template will be rendered
+
+// When using {{view App.AuthorView}} :
+// An instance of App.AuthorView will be created
+// It will be rendered here, using template associated with that view 
+// (default template: "author")
+
+// THE {{render}} HELPER
+// {{render}} takes 2 parameters:
+// -> context of the setup
+// -> model, which will be passed to the controller if provided
+
+// {{render}} does several things:
+// -> When no model is provided it gets singleton instance of corresponding controller
+// -> When a model is provided it gets a unique instance of corresponding controller
+// -> Render named template using controller
+// -> Sets mdel of the corresponding controller
+<script type="text/x-handlebars" data-template-name='author'>
+  Written by {{firstName}} {{lastName}}.
+  Total Posts: {{postCount}}
+</script>
+
+<script type="text/x-handlebars" data-template-name='post'>
+  <h1>{{title}}</h1>
+  <div>{{body}}</div>
+  {{render "author" author}}
+</script>
+
+App.AuthorController = Ember.ObjectController.extend({
+	postCount: function() {
+		return App.Post.countForAuthor(this.get("model"));
+	}.property("model", "App.Post.@each.author")
+});
+// render here will:
+// -> Get an instance of App.AuthorView if that class exist
+// -> Use corresponding template
+// -> Get (or generate) singleton instance of AuthorController
+// -> Set AuthorController's model to 2nd arg passed to render
+// -> Render template in place, with context created in previous steps
+
+// {{render}} does not require presence of a matching route
+// {{render}} is similar to {{outlet}} .Both tell Ember.js 
+// to devote portion of the page to something
+// {{outlet}} -> The router determines the route and sets up 
+// appropriate controllers/views/models
+// {{render}} -> You specify (directly and indirectly) 
+// appropriate controllers/views/models
+// {{render}} cannot be called multiple times for same route 
+// when not specifying model
+
+// COMPARISON TABLE
+/*
+GENERAL
+Helper			Template			Model			View			Controller
+{{partial}}		Specified template	Current Model	Current View	Current Controller
+{{view}} 		View's Template 	Current Model 	Specified View 	Current Controller
+{{render}} 		View's Template 	Specified Model Specified View 	Specified Controller		
+
+SPECIFIC
+Helper						Template		Model		View			Controller
+{{partial "author"}} 		author.hbs 		Post 		App.PostView 	App.PostController
+{{view App.AuthorView}} 	author.hbs 		Post 		App.AuthorView 	App.PostController
+{{render "author" author}} 	author.hbs 		Author 		App.AuthorView 	App.AuthorController
+*/
+
+
+
+
+
+
