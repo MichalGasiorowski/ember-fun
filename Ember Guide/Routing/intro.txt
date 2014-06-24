@@ -1,1 +1,35 @@
 // ROUTING 
+// Users interact with app -> it moves through many defferent states.
+// Ember gives helpful tools for managing state.
+// In Ember, each state is represented by URL. All is encapsulated 
+// by route handlers for the URLs.
+
+// At any given time, your app has 1 or more active route handlers.
+// Handlers can change for 2 reasons:
+// 1. User interacted with view, which generated event that changed URL
+// 2. User changed URL manually (eg. back button) or page was loaded first time
+
+// When URL changes, newly active route handlers may do one or more of following:
+// 1. Conditionally redirect to new URL
+// 2. Update controller so that it represents model
+// 3. Change template on screen, or place new template into existing outlet.
+
+// LOGGING ROUTE CHANGES
+// As app increases in complexity, it can be helpful to see exactly 
+// what is going on with router. To have Ember write out transition events to log:
+App = Ember.Application.create({
+	LOG_TRANSITIONS: true
+});
+
+// SPECIFYING A ROOT URL 
+// If Ember app is one of multi web apps served from same domain, it may be
+// necessary to indicate to router what root URL for your Ember app is. 
+// By default, Ember will assume it is served from root of your domain.
+
+// If it is needed to serve app from ex. www.emberjs.com/blog, it would be
+// necessary to specify a root URL of /blog/ :
+App.Router.reopen({
+	rootURL: '/blog'
+});
+
+

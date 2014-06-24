@@ -1,0 +1,42 @@
+// DEFINING YOUR ROUTES
+// When app starts, router is responsible for displaying templates, loading data
+// setting up application state. It matches current URL to the defined routes.
+App.Router.map(function() {
+	this.route("about", { path: "/about" });
+	this.route("favorites", { path: "/favs" });
+});	
+// When user visits /about , Ember.js will render about template. 
+// Visiting /favs will render favorites template.
+
+// Ember app get few routes for free : ApplicationRoute and IndexRoute ( / )
+// Can leave off the path if it is the same as the route name :
+App.Router.map(function() {
+	this.route("about");
+	this.route("favorites", { path: "/favs" });
+});
+
+// Inside templates, can use {{link-to}} to navigate between routes, 
+// using name that was provided to route method ( or / in index case)
+{{#link-to 'index'}}<img class="logo">{{/link-to}}
+<nav>
+	{{#link-to 'about'}}About{{/link-to}}
+	{{#link-to 'favorites'}}Favotires{{/link-to}}
+</nav>
+
+// {{link-to}} helper will also add active class to the 
+// link that points to currently active node
+// Can customize Ember behaviour by creating Ember.Route sublass.
+App.IndexRoute = Ember.Route.extend({
+	setupController: function(controller) {
+		// Set the IndexController's 'title'
+		controller.set('title', "My App");
+	}
+});
+
+// The IndexController is starting context of index template. Now can use index in template:
+<!-- get the title from the IndexController -->
+<h1>{{title}}</h1>
+
+
+
+
